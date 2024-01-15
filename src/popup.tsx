@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { privateKeyToAccount } from 'viem/accounts'
+import { goerli } from 'viem/chains'
+
+const secret =
+  '0x5b91188c221aee8a277de6150e769b161aadb5983d084e83e4f336ceb8049285'
+const account = privateKeyToAccount(secret)
 
 const Popup = () => {
-  const [count, setCount] = useState(0)
   const [currentURL, setCurrentURL] = useState<string>()
-
-  useEffect(() => {
-    chrome.action.setBadgeText({ text: count.toString() })
-  }, [count])
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       setCurrentURL(tabs[0].url)
     })
-
-    setTimeout(() => {
-      // @ts-ignore
-      window.ethereum = {}
-    }, 2000)
   }, [])
 
   const changeBackground = () => {
@@ -39,17 +35,18 @@ const Popup = () => {
 
   return (
     <>
-      <ul style={{ minWidth: '700px' }}>
+      <ul style={{ minWidth: '200px', fontSize: '16px' }}>
         <li>Current URL: {currentURL}</li>
-        <li>Current Time: {new Date().toLocaleTimeString()}</li>
+        <li>Account: {account.address}</li>
+        <li>
+          chain info:
+          <ul>
+            <li>chainId: {goerli.id}</li>
+            <li>chainName: {goerli.name}</li>
+            <li>RPC: {goerli.rpcUrls.default.http}</li>
+          </ul>
+        </li>
       </ul>
-      <button
-        onClick={() => setCount(count + 1)}
-        style={{ marginRight: '5px' }}
-      >
-        count up
-      </button>
-      <button onClick={changeBackground}>change background</button>
     </>
   )
 }
