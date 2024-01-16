@@ -1,3 +1,17 @@
+const script = document.createElement('script')
+// script.textContent = ``
+script.src = chrome.runtime.getURL('js/inject.js')
+script.setAttribute('async', 'false')
+const head = document.head || document.documentElement
+
+head.insertBefore(script, head.children[0])
+head.removeChild(script)
+
+interface RequestArguments {
+  readonly method: string
+  readonly params?: readonly unknown[] | object
+}
+
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.color) {
     // console.log('Receive color = ' + msg.color)
@@ -7,4 +21,3 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     sendResponse('Color message is none.')
   }
 })
-window.easy = 'easy'

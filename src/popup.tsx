@@ -33,6 +33,10 @@ const Popup = () => {
     })
   }
 
+  const onChoice = () => {
+    chrome.browserAction.setPopup({ popup: 'choice.html' })
+  }
+
   return (
     <>
       <ul style={{ minWidth: '200px', fontSize: '16px' }}>
@@ -47,6 +51,8 @@ const Popup = () => {
           </ul>
         </li>
       </ul>
+
+      <button onClick={onChoice}>Choice </button>
     </>
   )
 }

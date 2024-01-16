@@ -5,10 +5,6 @@
   "description": "a simple wallet chrome extension",
   "version": "1.0",
 
-  "options_ui": {
-    "page": "options.html"
-  },
-
   "action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
@@ -24,6 +20,12 @@
   "background": {
     "service_worker": "js/background.js"
   },
+  "web_accessible_resources": [
+    {
+      "resources": ["js/inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
 
   "permissions": ["storage"],
 
