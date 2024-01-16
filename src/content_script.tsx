@@ -7,11 +7,6 @@ const head = document.head || document.documentElement
 head.insertBefore(script, head.children[0])
 head.removeChild(script)
 
-interface RequestArguments {
-  readonly method: string
-  readonly params?: readonly unknown[] | object
-}
-
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.color) {
     // console.log('Receive color = ' + msg.color)
