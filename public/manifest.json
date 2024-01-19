@@ -22,12 +22,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["js/inject.js"],
+      "resources": ["js/inpage.js"],
       "matches": ["<all_urls>"]
     }
   ],
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "webRequest"],
 
   "host_permissions": ["<all_urls>"]
 }
