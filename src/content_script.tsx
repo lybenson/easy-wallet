@@ -28,18 +28,37 @@ function injectScript() {
 injectScript()
 
 window.addEventListener('message', (event: MessageEvent<PostMessageStream>) => {
+  const { data } = event.data
   if (event.data.target === 'easywallet_contentscript') {
-    console.log('content_script receive message: ', event.data)
-    // chrome.runtime.sendMessage(event.data, (response) => {
-    //   console.log(response)
-    // })
+    console.log('content_script receive message: ', data)
 
-    window.postMessage(
+    chrome.runtime.sendMessage(
       {
-        target: 'easywallet_inpage',
-        data: 'world'
+        target: 'easywallet_background',
+        data: data
       },
-      window.location.origin
+      (response) => {
+        console.log(
+          'content_script receive message from background: ',
+          response
+        )
+
+        window.postMessage(
+          {
+            target: 'easywallet_inpage',
+            data: response
+          },
+          window.location.origin
+        )
+      }
     )
+
+    // window.postMessage(
+    //   {
+    //     target: 'easywallet_inpage',
+    //     data: 'world'
+    //   },
+    //   window.location.origin
+    // )
   }
 })

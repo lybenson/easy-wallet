@@ -12,26 +12,9 @@ export type RequestArguments = {
 
 export type PostMessageStream = {
   target: string
-  data: any
+  data: RequestArguments
 }
 
-// const _rpcRequest(request, t) {
-//   let r = t
-//   return (
-//     Array.isArray(e) ||
-//       (e.jsonrpc || (e.jsonrpc = '2.0'),
-//       ('eth_accounts' !== e.method &&
-//         'eth_requestAccounts' !== e.method) ||
-//         (r = (r, n) => {
-//           this._handleAccountsChanged(
-//             n.result ?? [],
-//             'eth_accounts' === e.method
-//           ),
-//             t(r, n)
-//         })),
-//     this._rpcEngine.handle(e, r)
-//   )
-// }
 window.easy = {
   request: (args: RequestArguments) => {
     window.postMessage(
@@ -46,6 +29,9 @@ window.easy = {
       const listener = (event: MessageEvent<PostMessageStream>) => {
         if (event.data.target === 'easywallet_inpage') {
           window.removeEventListener('message', listener)
+
+          console.log(event)
+
           resolve(event.data.data)
         }
       }

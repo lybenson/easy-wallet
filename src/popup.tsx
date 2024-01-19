@@ -33,9 +33,7 @@ const Popup = () => {
     })
   }
 
-  const onChoice = () => {
-    chrome.browserAction.setPopup({ popup: 'choice.html' })
-  }
+  const onChoice = () => {}
 
   return (
     <>

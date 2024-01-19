@@ -6,6 +6,7 @@ const srcDir = path.join(__dirname, '..', 'src')
 module.exports = {
   entry: {
     popup: path.join(srcDir, 'popup.tsx'),
+    choice: path.join(srcDir, 'choice.tsx'),
     inpage: path.join(srcDir, 'inpage.ts'),
     background: path.join(srcDir, 'background.ts'),
     content_script: path.join(srcDir, 'content_script.tsx')
