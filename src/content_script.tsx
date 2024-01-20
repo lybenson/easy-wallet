@@ -30,19 +30,14 @@ injectScript()
 window.addEventListener('message', (event: MessageEvent<PostMessageStream>) => {
   const { data } = event.data
   if (event.data.target === 'easywallet_contentscript') {
-    console.log('content_script receive message: ', data)
-
+    // 发送消息到插件脚本中获取数据
     chrome.runtime.sendMessage(
       {
         target: 'easywallet_background',
         data: data
       },
       (response) => {
-        console.log(
-          'content_script receive message from background: ',
-          response
-        )
-
+        // 接收到来自插件脚本中的消息 并通知给 inpage
         window.postMessage(
           {
             target: 'easywallet_inpage',
@@ -52,13 +47,5 @@ window.addEventListener('message', (event: MessageEvent<PostMessageStream>) => {
         )
       }
     )
-
-    // window.postMessage(
-    //   {
-    //     target: 'easywallet_inpage',
-    //     data: 'world'
-    //   },
-    //   window.location.origin
-    // )
   }
 })

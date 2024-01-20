@@ -7,7 +7,7 @@ const secret =
   '0x5b91188c221aee8a277de6150e769b161aadb5983d084e83e4f336ceb8049285'
 const account = privateKeyToAccount(secret)
 const rpc_url = 'https://rpc.ankr.com/eth_goerli'
-
+const rpcIndex = 1
 const walletClient = createWalletClient({
   account,
   chain: goerli,
@@ -34,36 +34,30 @@ const openChoiceAccountWindow = () => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === 'easywallet_background') {
-    console.log(message)
     const { data } = message
 
     if (data.method === 'eth_requestAccounts') {
-      openChoiceAccountWindow()
-    } else if (data.method === 'eth_accounts') {
+      // 读取存储中钱包账号数据
       chrome.storage.local.get(['accounts'], async (result) => {
         sendResponse(result.accounts.map((account: any) => account.address))
       })
+    } else if (data.method === 'eth_accounts') {
+      // 读取存储中记录的已连接网站的账号数据
     } else {
+      // 获取链信息发送 rpc 请求
       chrome.storage.local.get(['goerli'], async (result) => {
         const chainInfo = result.goerli
-        const publicClient = createPublicClient({
-          chain: goerli,
-          transport: http(chainInfo.rpc)
-        })
+        const response = await fetch(chainInfo.rpc, {
+          method: 'POST',
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: data.method,
+            params: data.params || [],
+            id: rpcIndex
+          })
+        }).then((res) => res.json())
 
-        const walletClient = createWalletClient({
-          account,
-          chain: goerli,
-          transport: http(rpc_url)
-        })
-        // sendResponse('22312')
-        // const response = await publicClient.request(data)
-
-        const response = await walletClient.sendTransaction({
-          to: account.address,
-          value: parseEther('0.000000001')
-        })
-
+        // 结果发送给 content script
         sendResponse(response)
       })
     }
@@ -89,15 +83,3 @@ chrome.runtime.onInstalled.addListener(() => {
     ]
   })
 })
-
-// window.easy
-//   .request({
-//     method: 'eth_accounts'
-//   })
-//   .then((res) => console.log(res))
-
-// window.easy
-//   .request({
-//     method: 'eth_chainId'
-//   })
-//   .then((res) => console.log(res))
